@@ -31,6 +31,8 @@
 #include <Atom/RPI.Public/Scene.h>
 #include <Integration/Render/AtomIntegration/PopcornFXFeatureProcessor.h>
 
+#pragma optimize("", off)
+
 namespace PopcornFX {
 
 	// CVar: p_PopcornFXParticles

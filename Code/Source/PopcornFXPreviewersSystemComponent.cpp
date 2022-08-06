@@ -7,9 +7,28 @@
 
 #include "PopcornFXPreviewersSystemComponent.h"
 
+#include <AzCore/Serialization/EditContext.h>
 #include <AzCore/StringFunc/StringFunc.h>
 
 namespace PopcornFX {
+    void PopcornFXPreviewersSystemComponent::Reflect(AZ::ReflectContext* context)
+    {
+		if (AZ::SerializeContext* serialize = azrtti_cast<AZ::SerializeContext*>(context))
+		{
+			serialize->Class<PopcornFXPreviewersSystemComponent, AZ::Component>()
+				->Version(0)
+				;
+
+			if (AZ::EditContext* ec = serialize->GetEditContext())
+			{
+				ec->Class<PopcornFXPreviewersSystemComponent>("PopcornFXPreviewersSystemComponent", "")
+					->ClassElement(AZ::Edit::ClassElements::EditorData, "")
+					->Attribute(AZ::Edit::Attributes::AppearsInAddComponentMenu, AZ_CRC("System"))
+					->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+					;
+			}
+		}
+    }
 
 	void	PopcornFXPreviewersSystemComponent::Init()
 	{

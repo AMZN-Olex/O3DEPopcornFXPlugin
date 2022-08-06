@@ -5,16 +5,16 @@
 
 set(PK_O3DE_DEVELOPMENT ON)
 
-if (${INSTALLED_ENGINE})
-    o3de_read_json_key(o3de_build_number ${LY_ROOT_FOLDER}/engine.json "O3DEBuildNumber")
-    if (o3de_build_number STREQUAL "" OR o3de_build_number STREQUAL "0")
-        message(FATAL_ERROR "Invalid O3DEBuildNumber from 'engine.json'")
-    endif()
-else()
+# if (${INSTALLED_ENGINE})
+#     o3de_read_json_key(o3de_build_number ${LY_ROOT_FOLDER}/engine.json "O3DEBuildNumber")
+#     if (o3de_build_number STREQUAL "" OR o3de_build_number STREQUAL "0")
+#         message(FATAL_ERROR "Invalid O3DEBuildNumber from 'engine.json'")
+#     endif()
+# else()
     set(o3de_build_number "2205.0")
     #set(o3de_build_number "2111.2")
     #set(o3de_build_number "2111.1")
-endif()
+# endif()
 
 string(REPLACE "." ";" o3de_version_list ${o3de_build_number})
 list(GET o3de_version_list 0 PK_O3DE_MAJOR_VERSION)
