@@ -19,6 +19,8 @@
 #include <pk_base_object/include/hbo_context.h>
 #include <pk_particles/include/ps_project_settings.h>
 
+#pragma optimize("", off)
+
 namespace PopcornFX
 {
 	bool	GetProjectSettings(const AZStd::string &projectFilePath, AZStd::string &outRootPath, AZStd::string &outLibraryPath)
@@ -258,7 +260,7 @@ namespace PopcornFX
 			AZStd::string	folderPath = assetPath;
 			AZ::StringFunc::Path::StripFullName(folderPath);
 			AZ::StringFunc::Path::Normalize(folderPath);
-			folderPath = CFilePath::Relativize(projectPath.c_str(), folderPath.c_str()).Data();
+			//folderPath = CFilePath::Relativize(projectPath.c_str(), folderPath.c_str()).Data();
 
 			const AZ::IO::PathView pathView(folderPath);
 			if (pathView.IsRelativeTo(AZ::IO::PathView(rootPath)))

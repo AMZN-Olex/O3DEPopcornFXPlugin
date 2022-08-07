@@ -368,7 +368,8 @@ void	PopcornFXIntegration::DestroyEffect(StandaloneEmitter *emitter)
 // AZ::Data::PopcornFXLoadBus::Handler
 ////////////////////////////////////////////////////////////////////////
 
-bool	PopcornFXIntegration::LoadEffect(PopcornFXAsset *asset, const char *assetPath, const AZ::u8 *assetData, const AZ::IO::SizeType assetDataSize, [[maybe_unused]] const AZ::Data::AssetId &assetId)
+bool	PopcornFXIntegration::LoadEffect(PopcornFXAsset *asset, const char *assetPath, const AZ::u8 *assetData, 
+	const AZ::IO::SizeType assetDataSize, [[maybe_unused]] const AZ::Data::AssetId &assetId)
 {
 #if defined(POPCORNFX_EDITOR)
 	AZStd::string	rootPath = m_PackPath;
@@ -394,8 +395,32 @@ bool	PopcornFXIntegration::LoadEffect(PopcornFXAsset *asset, const char *assetPa
 	}
 	else
 	{
-		AZ_Error("PopcornFX", false, "PopcornFXAssetHandler: Unable to get product asset for %s", assetPath);
-		return false;
+		AZStd::string productPath;
+		AZ::Data::AssetCatalogRequestBus::BroadcastResult(productPath, &AZ::Data::AssetCatalogRequests::GetAssetPathById, assetId);
+		AZ::StringFunc::Path::Normalize(productPath);
+
+		if (productPath.empty() == false)
+		{
+			if (ChangePackIFN(productPath.c_str(), File::DefaultFileSystem(), rootPath, libraryPath, false))
+			{
+				AZStd::string	oldRootPath;
+				AZStd::string	oldLibraryPath;
+				if (LoadPackPathFromJson(oldRootPath, oldLibraryPath))
+				{
+					if (!oldRootPath.empty())
+					{
+						AZ_Error("PopcornFX", false, "The effect '%s' is not part of the pack '%s'.\n If you want to change the current pack delete the popcornfx_pack.json file at the root of your project and restart the O3DE Editor.", assetPath, oldRootPath.c_str());
+						return false;
+					}
+				}
+				PackChanged(rootPath, libraryPath);
+			}
+		}
+		else
+		{
+			AZ_Error("PopcornFX", false, "PopcornFXAssetHandler: Unable to get product asset for %s", assetPath);
+			return false;
+		}
 	}
 #endif //POPCORNFX_EDITOR
 
